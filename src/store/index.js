@@ -3,21 +3,13 @@ import axios from 'axios';
 
 const store= createStore({
   state: {
-    available_pizzas: [
-      {id:1,
-        display_name:"Salami",
-       description:"Pizza with salami and cheese",
-      price:5.00}
-    ],
-    ordered_pizzas: [
-    ]
+    available_pizzas: [],
+    ordered_pizzas: []
   },
   mutations: {
-    
     add_available_pizza(state, pizza) {
-      state.available_pizzas.push({id:pizza.id, display_name:pizza.display_name, description:pizza.description, price:pizza.price});
+      state.available_pizzas.push({id:pizza.id, display_name:pizza.display_name, description:pizza.description, price:pizza.price, imgdata:"data:image/jpeg;base64,"+pizza.imgbase64});
     },
-
     add_ordered_pizza(state, id) {
       const pizza = state.available_pizzas.filter(item => item.id === id)[0]   
       let already_ordered = state.ordered_pizzas.filter(item => item.pizza.id == id)[0]
@@ -31,10 +23,6 @@ const store= createStore({
   
   },
   actions: {
-    create_pizza(context,{id, pizzaname, description, price}) {
-      context.commit('add_available_pizza',
-        {id: id, display_name:pizzaname, description:description, price:price});
-    },
     order_pizza(context, id) {
       context.commit('add_ordered_pizza', id);
     },
@@ -43,7 +31,7 @@ const store= createStore({
         .then((response) => {
           response.data.forEach(obj => {
             context.commit('add_available_pizza',
-              {id: obj.id, display_name:obj.title, description:obj.description, price:obj.price});
+              {id: obj.id, display_name:obj.title, description:obj.description, price:obj.price, imgbase64:obj.image});
           });
         }).catch(function(error) {
           console.log(error)

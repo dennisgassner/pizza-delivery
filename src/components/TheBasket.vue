@@ -1,7 +1,7 @@
 <template>
-    
-    <v-card width="300" class="mx-auto" >
-        <v-system-bar/>
+    <v-card width="300" class="mx-auto mt-4" style="position: fixed;">
+        <v-system-bar color="red darken-3" style="background-color:#C62828;" height="10"/>
+        <v-system-bar color="green darken-2" style="background-color:#388E3C;" height="10"/>
         <v-list>
             <v-list-item>
                 <v-list-item-content>
@@ -24,7 +24,6 @@
             </template>
         </v-list>
     </v-card>
-
 </template>
 
 <script>

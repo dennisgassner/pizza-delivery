@@ -1,21 +1,29 @@
 <template>
-
-    <v-card  max-width="300" min-width="300">
-        <v-img
-        height="250"
-        src="@/assets/pizza-3010062_640.jpg"
-        ></v-img>
-
-        <v-card-title>{{props.pizza.title}}</v-card-title>
-
-        <v-card-subtitle>{{props.pizza.description}}</v-card-subtitle>
-        <v-card-subtitle>{{parseFloat(props.pizza.price).toFixed(2)}} USD</v-card-subtitle>
-
-        <v-card-actions>
-            <v-btn color="orange lighten-2" text @click="$emit('buy',props.pizza.id)">Order</v-btn>
-        </v-card-actions>
+    <v-card elevation="2"  class="mx-auto" width="600">
+        <v-row>
+            <v-col>
+                <v-card-title >{{props.pizza.title}}</v-card-title>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="8">
+                <v-card-subtitle>{{props.pizza.description}}</v-card-subtitle>
+            </v-col>
+            <v-col cols="4">
+                <v-img height="100" class="mr-1 rounded-lg" :src="props.pizza.imgdata"></v-img>
+            </v-col>
+        </v-row>
+        <v-row>                
+            <v-col>
+                <v-card-actions>
+                    <v-btn rounded color="green darken-2" style="color:#fff;"
+                        @click="$emit('buy',props.pizza.id)">
+                        Order for {{parseFloat(props.pizza.price).toFixed(2)}} USD
+                    </v-btn>
+                </v-card-actions>
+            </v-col>
+        </v-row>
     </v-card>
-
 </template>
 
 <script>
@@ -28,14 +36,11 @@ export default defineComponent({
     emits: ["buy"],
 
     setup(props) {
-    
         return {
             props
         }
-
     }
 
-    
 })
 </script>
 

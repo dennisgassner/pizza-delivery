@@ -1,13 +1,13 @@
 <template>
   <v-container  fluid>
-    <v-row >
-      <v-col v-for="(item, i) in getOfferedPizzas" :key="i">
+    <v-list>  
+      <v-list-item v-for="(item, i) in getOfferedPizzas" :key="i">
         <a-pizza   :pizza ="{title:item.display_name, 
                     description:item.description, 
                     price:item.price, 
-                    id:item.id}" @buy="addToBasket($event)"></a-pizza>    
-      </v-col>
-    </v-row>
+                    id:item.id, imgdata:item.imgdata}" @buy="addToBasket($event)"></a-pizza>   
+      </v-list-item>
+    </v-list>
   </v-container>
 </template>
 
