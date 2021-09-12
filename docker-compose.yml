@@ -1,0 +1,38 @@
+services:
+    deliverykeycloak:
+        image: orgdennis/deliverykeycloak
+        ports:
+            - "8084:8080"
+    deliverymongo:
+        image: orgdennis/deliverymongo
+        ports:
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mongoadmin
+            MONGO_INITDB_ROOT_PASSWORD: secret
+        container_name: deliverymongo
+    dockerproxy:
+        image: orgdennis/dockerproxy
+        ports:
+            - "8086:8080"
+        #addhost keycloack
+        ##hostname proxy
+        depends_on:
+            - "deliverykeycloak"
+    deliverybackend:
+        image: orgdennis/deliverybackend
+        ports:
+            - "8082:8080"
+        ##addhost keycloack, mongoadmin
+        environment:
+            SPRING_PROFILES_ACTIVE: prod
+        depends_on:
+            - "deliverymongo"
+            - "deliverykeycloak"
+    mongosetup:
+        image: orgdennis/deliverymongo
+        depends_on:
+            - "deliverymongo"
+        restart: "no"
+        command: mongoimport --db admin --username mongoadmin --password secret --host deliverymongo:27017 --collection pizzas --drop  --type json --file /tmp/pizzas --jsonArray
+            
