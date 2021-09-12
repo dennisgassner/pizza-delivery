@@ -8,7 +8,7 @@ const store= createStore({
   },
   mutations: {
     add_available_pizza(state, pizza) {
-      state.available_pizzas.push({id:pizza.id, display_name:pizza.display_name, description:pizza.description, price:pizza.price, imgdata:"data:image/jpeg;base64,"+pizza.imgbase64});
+      state.available_pizzas.push({id:pizza.id, display_name:pizza.display_name, description:pizza.description, price:pizza.price, imgdata:pizza.imgbase64});
     },
     add_ordered_pizza(state, id) {
       const pizza = state.available_pizzas.filter(item => item.id === id)[0]   
@@ -26,14 +26,31 @@ const store= createStore({
     order_pizza(context, id) {
       context.commit('add_ordered_pizza', id);
     },
-    async fetch_pizzas(context) {
-      axios.get('/delivery/list_all')
-        .then((response) => {
+    async fetch_pizzas(context) { 
+      const tokenrequest = {
+        body:"username="+process.env.VUE_APP_API_TOKEN_USERNAME+"&password="+process.env.VUE_APP_API_TOKEN_PASS+"&grant_type=password&client_id="+process.env.VUE_APP_API_TOKEN_CLIENTID+"",
+        url:process.env.VUE_APP_API_TOKEN_REAL_URL,
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        handler:"oauthtoken"
+      };
+
+      let token;
+      await axios.post('/get_token', tokenrequest)
+      .then(response=>token = 'Bearer ' + response.data);
+
+      axios.get('/load_all_pizzas', {headers: {
+        Authorization: token
+      }})
+      .then((response) => {
           response.data.forEach(obj => {
-            context.commit('add_available_pizza',
-              {id: obj.id, display_name:obj.title, description:obj.description, price:obj.price, imgbase64:obj.image});
+             axios.get('/pizzadetail/'+obj.id, { headers: { Authorization: token } }
+             ).then((res) => {
+              context.commit('add_available_pizza',{id: res.data.id, display_name:res.data.title, description:res.data.description, price:res.data.price, imgbase64:res.data.image})
+            })
           });
-        }).catch(function(error) {
+        })
+        .catch(function(error) {
           console.log(error)
         });
     }

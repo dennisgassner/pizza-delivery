@@ -10,7 +10,7 @@
                 <v-card-subtitle>{{props.pizza.description}}</v-card-subtitle>
             </v-col>
             <v-col cols="4">
-                <v-img height="100" class="mr-1 rounded-lg" :src="props.pizza.imgdata"></v-img>
+                <v-img height="100" class="mr-1 rounded-lg" :src="imagesrc"></v-img>
             </v-col>
         </v-row>
         <v-row>                
@@ -28,6 +28,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { computed  } from 'vue'
 
 export default defineComponent({
     props: {
@@ -37,7 +38,8 @@ export default defineComponent({
 
     setup(props) {
         return {
-            props
+            props,
+            imagesrc: computed(()=>"data:image/jpeg;base64,"+props.pizza.imgdata)
         }
     }
 
