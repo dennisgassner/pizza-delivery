@@ -53,7 +53,16 @@ const store= createStore({
         .catch(function(error) {
           console.log(error)
         });
-    }
+    },
+  async fetch_pizzas_graphql(context) {
+    const postdata = {
+      query: "{ allPizzas { id, title} }"
+    };
+    axios.post('/graphql/allPizzas/', postdata)
+    .then(response => response.data.data.allPizzas.forEach(p => {
+      context.commit('add_available_pizza',{id:p.id, display_name:p.title})
+    })  );
+  }
   },
   getters: {
     get_available_pizzas(state) {

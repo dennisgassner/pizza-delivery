@@ -18,6 +18,12 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {'^/get_token': process.env.VUE_APP_API_TOKEN_ENDPOINT},
         ws:true
+      },
+      "^/graphql/allPizzas/": {
+        target: "http://localhost:8090",
+        changeOrigin: true,
+        pathRewrite: {'^/graphql/allPizzas/': '/pizzamanagement/graphql'},
+        ws:true
       }
     }
   }
