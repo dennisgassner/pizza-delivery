@@ -15,20 +15,25 @@ services:
         image: orgdennis/dockerproxy
         ports:
             - "8086:8080"
-        #addhost keycloack
-        ##hostname proxy
         depends_on:
             - "deliverykeycloak"
     deliverybackend:
         image: orgdennis/deliverybackend
         ports:
             - "8082:8080"
-        ##addhost keycloack, mongoadmin
         environment:
             SPRING_PROFILES_ACTIVE: prod
         depends_on:
             - "deliverymongo"
             - "deliverykeycloak"
+    pizzamgmt:
+        image: orgdennis/pizzamgmt
+        ports:
+            - "8090:8090"
+        environment:
+            SPRING_PROFILES_ACTIVE: prod
+        depends_on:
+            - "deliverymongo"
     mongosetup:
         image: orgdennis/deliverymongo
         depends_on:
