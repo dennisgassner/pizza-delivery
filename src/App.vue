@@ -1,30 +1,13 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Order</router-link> |
-    <router-link to="/manage">About</router-link>
-  </div>
-  <router-view/>
+ <v-app>
+    <v-app-bar app color="green darken-2">
+       <v-spacer></v-spacer>
+        <h2 class="text-justify text-uppercase font-weight-thin" style="color:#C62828;">Pizza Delivery</h2>
+          <subtitle-2 style="color:#fff;" class="mt-2">...today's special: your pizza extra round!</subtitle-2>
+       <v-spacer></v-spacer>
+    </v-app-bar>
+    <v-main>
+    <router-view/>
+    </v-main>
+ </v-app>
 </template>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>

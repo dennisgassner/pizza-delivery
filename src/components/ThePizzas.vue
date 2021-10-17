@@ -1,5 +1,5 @@
 <template>
-  <v-container  fluid>
+  <v-container fluid>
     <v-list>  
       <v-list-item v-for="(item, i) in getOfferedPizzas" :key="i">
         <a-pizza   :pizza ="{title:item.display_name, 
@@ -30,7 +30,6 @@ export default defineComponent({
         getOfferedPizzas: computed(()=>store.getters.get_available_pizzas),
         addToBasket:(id)=>store.dispatch('order_pizza', id)
         }
-
   },
 })
 </script>

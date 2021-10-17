@@ -24,6 +24,18 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {'^/graphql/allPizzas/': '/pizzamanagement/graphql'},
         ws:true
+      },
+      "^/graphql/newPizza/": {
+        target: "http://localhost:8090",
+        changeOrigin: true,
+        pathRewrite: {'^/graphql/newPizza/': '/pizzamanagement/graphql'},
+        ws:true
+      }
+      ,"^/graphql/api": {
+        target: "http://localhost:8090",
+        changeOrigin: true,
+        pathRewrite: {'^/graphql/api': '/pizzamanagement/graphql'},
+        ws:true
       }
     }
   }

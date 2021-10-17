@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios';
+import { request, gql, GraphQLClient } from 'graphql-request'
 
 const store= createStore({
   state: {
@@ -7,6 +8,9 @@ const store= createStore({
     ordered_pizzas: []
   },
   mutations: {
+    empty_available_pizzas(state) {
+      state.available_pizzas = []
+    },
     add_available_pizza(state, pizza) {
       state.available_pizzas.push({id:pizza.id, display_name:pizza.display_name, description:pizza.description, price:pizza.price, imgdata:pizza.imgbase64});
     },
@@ -27,6 +31,7 @@ const store= createStore({
       context.commit('add_ordered_pizza', id);
     },
     async fetch_pizzas(context) { 
+      context.commit('empty_available_pizzas')
       const tokenrequest = {
         body:"username="+process.env.VUE_APP_API_TOKEN_USERNAME+"&password="+process.env.VUE_APP_API_TOKEN_PASS+"&grant_type=password&client_id="+process.env.VUE_APP_API_TOKEN_CLIENTID+"",
         url:process.env.VUE_APP_API_TOKEN_REAL_URL,
@@ -54,15 +59,40 @@ const store= createStore({
           console.log(error)
         });
     },
-  async fetch_pizzas_graphql(context) {
-    const postdata = {
-      query: "{ allPizzas { id, title} }"
-    };
-    axios.post('/graphql/allPizzas/', postdata)
-    .then(response => response.data.data.allPizzas.forEach(p => {
-      context.commit('add_available_pizza',{id:p.id, display_name:p.title})
-    })  );
-  }
+    async fetch_pizzas_graphql(context) {
+      context.commit('empty_available_pizzas')
+      const query = gql`
+        {
+          allPizzas {
+            id, title, description, price     
+          }
+        }
+      `
+      request('/graphql/allPizzas/', query)
+      .then(response => response.allPizzas.forEach(p => {
+        context.commit('add_available_pizza',{id:p.id, display_name:p.title, description:p.description, price:p.price})
+      })  );
+    },
+    create_new_pizza(context, newpizza) {
+      const mutation = gql`
+      mutation newPizza($title: String!, $description: String!, $price: Float!) {
+        newPizza(input: {title: $title, description: $description, price: $price}) {
+          id
+          title
+          description
+          price
+        }
+      }
+      ` 
+      const variables = {
+        title: newpizza.title,
+        description: newpizza.desc,
+        price: newpizza.price
+      }
+      const endpoint = '/graphql/api'
+      const graphQLClient = new GraphQLClient(endpoint,{})
+      graphQLClient.request(mutation, variables)
+    }
   },
   getters: {
     get_available_pizzas(state) {
